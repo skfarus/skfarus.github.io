@@ -111,6 +111,19 @@ html, body{
   color: #d5d5d5;
 }
 
+.fb-logo{
+  padding: .2rem;
+  background: linear-gradient(to bottom right,silver,white);
+}
+
+.logo-text{
+  margin-left: 10%;
+}
+
+.carousel-logo-item{
+  background: linear-gradient(to bottom right,#222,#3f3f3f);
+}
+
 footer{
   background-color: #3f3f3f;
   color: #d5d5d5;
