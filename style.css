@@ -116,6 +116,7 @@ html, body{
   padding: .2rem;
   background: linear-gradient(to bottom right,silver,white);
   max-width: 85px;
+  max-height: 85px;
 }
 
 .logo-text{
