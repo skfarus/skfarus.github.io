@@ -10,7 +10,7 @@ html, body{
 
 .navbar{
   padding: .4rem;
-  max-height: 150px;
+  max-height: 8rem;
 }
 .navbar-nav li{
   padding-right: 20px;
@@ -219,7 +219,7 @@ hr.light-100{
   transition: transform 0.5s ease, -webkit-transform 0.5s ease;
   -webkit-backface-visibility: visible;
   backface-visibility: visible;
-  max-height: 40rem;
+  max-height: 50rem;
   overflow: hidden;
 }
 /*--- Fixed Background Image --*/
