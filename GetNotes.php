@@ -1,10 +1,9 @@
 <?php
-//File for PHP/MySQL website
 // Konfiguracja bazy danych
-$db_host = 'mysql1.ugu.pl'; // Adres serwera bazy danych
-$db_name = 'db700414'; // Nazwa bazy danych
-$db_user = 'db700414'; // Użytkownik MySQL
-$db_pass = 'Kotkotkot3'; // Hasło do MySQL
+$db_host = 'mysql1.ugu.pl';
+$db_name = 'db700414';
+$db_user = 'db700414';
+$db_pass = 'Kotkotkot3';
 
 try {
     // Połączenie z bazą danych
@@ -14,30 +13,51 @@ try {
     die(json_encode(['status' => 'error', 'message' => 'Database connection failed: ' . $e->getMessage()]));
 }
 
-    // Pobranie listy klientów
-    $stmt = $pdo->prepare("SELECT ID, CONTENT, TIME FROM Notatnik ORDER BY TIME, ID DESC");
-    $stmt->execute();
-    $notatki = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo '<!DOCTYPE html>
+// Obsługa formularza
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['content'])) {
+    $content = trim($_POST['content']);
+    $stmt = $pdo->prepare("INSERT INTO Notatnik (CONTENT, TIME) VALUES (:content, NOW())");
+    $stmt->bindParam(':content', $content);
+    
+    if ($stmt->execute()) {
+        echo "<p>Notatka została dodana!</p>";
+    } else {
+        echo "<p>Błąd przy dodawaniu notatki.</p>";
+    }
+}
+
+// Pobranie listy notatek
+$stmt = $pdo->prepare("SELECT ID, CONTENT, TIME FROM Notatnik ORDER BY TIME DESC, ID DESC");
+$stmt->execute();
+$notatki = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>4PGS - 4 Players Game Studio</title>
 </head>
-<body>';
-    echo "<table border='1' cellspacing='0' cellpadding='5'>";
-    echo "<tr><th>ID</th><th>Treść</th><th>Czas</th></tr>";
+<body>
 
-    foreach ($notatki as $notatka) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($notatka['ID']) . "</td>";
-        echo "<td>" . nl2br(htmlspecialchars($notatka['CONTENT'])) . "</td>";
-        echo "<td>" . htmlspecialchars($notatka['TIME']) . "</td>";
-        echo "</tr>";
-    }
+<h2>Dodaj nową notatkę</h2>
+<form method="post">
+    <textarea name="content" rows="4" cols="50" required></textarea><br>
+    <button type="submit">Dodaj notatkę</button>
+</form>
 
-    echo "</table>
+<h2>Lista notatek</h2>
+<table border='1' cellspacing='0' cellpadding='5'>
+    <tr><th>ID</th><th>Treść</th><th>Czas</th></tr>
+    <?php foreach ($notatki as $notatka): ?>
+        <tr>
+            <td><?= htmlspecialchars($notatka['ID']) ?></td>
+            <td><?= nl2br(htmlspecialchars($notatka['CONTENT'])) ?></td>
+            <td><?= htmlspecialchars($notatka['TIME']) ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+
 </body>
-</html>";
-?>
+</html>
